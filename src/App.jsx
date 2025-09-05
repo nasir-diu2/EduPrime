@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage.jsx';
 import AboutPage from './pages/AboutPage.jsx';
+import AtAGlancePage from './pages/AtAGlancePage.jsx';
+import ContactPage from './pages/ContactPage.jsx';
+import CareerPage from './pages/CareerPage.jsx';
+import FAQPage from './pages/FAQPage.jsx';
 import AdminPage from './pages/AdminPage.jsx';
 import { api } from './services/api.js';
 import './index.css';
@@ -44,6 +48,10 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/at-a-glance" element={<AtAGlancePage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/career" element={<CareerPage />} />
+        <Route path="/faq" element={<FAQPage />} />
         <Route 
           path="/admin/*" 
           element={
