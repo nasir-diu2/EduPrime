@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Bars3Icon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
 import { api } from '../../services/api.js';
 
 const MENU = [
@@ -58,6 +59,10 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [navItems, setNavItems] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState({});
+  
+  const isExternalLink = (link) => {
+    return /^https?:\/\//.test(link || '') || (link || '').startsWith('mailto:') || (link || '').startsWith('tel:');
+  };
   
   useEffect(() => {
     loadNavItems();
@@ -126,34 +131,54 @@ export default function Navbar() {
                     {dropdownOpen[item.id] && (
                       <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-md shadow-xl border border-gray-100 py-2 z-50">
                         {item.children.map((child) => (
-                          <a
-                            key={child.id}
-                            href={child.link}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200"
-                            onClick={closeAllDropdowns}
-                          >
-                            {child.label}
-                          </a>
+                          isExternalLink(child.link) ? (
+                            <a
+                              key={child.id}
+                              href={child.link}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200"
+                              onClick={closeAllDropdowns}
+                            >
+                              {child.label}
+                            </a>
+                          ) : (
+                            <Link
+                              key={child.id}
+                              to={child.link}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200"
+                              onClick={closeAllDropdowns}
+                            >
+                              {child.label}
+                            </Link>
+                          )
                         ))}
                       </div>
                     )}
                   </div>
                 ) : (
-                  <a
-                    href={item.link}
-                    className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-200"
-                  >
-                    {item.label}
-                  </a>
+                  isExternalLink(item.link) ? (
+                    <a
+                      href={item.link}
+                      className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-200"
+                    >
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link
+                      to={item.link}
+                      className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-200"
+                    >
+                      {item.label}
+                    </Link>
+                  )
                 )}
               </div>
             ))}
-            <a
-              href="/apply"
+            <Link
+              to="/apply"
               className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2 rounded-md text-sm font-semibold shadow hover:from-blue-700 hover:to-indigo-700 transition-colors duration-200"
             >
               Apply Now
-            </a>
+            </Link>
           </div>
           
           {/* Mobile menu button */}
@@ -190,36 +215,57 @@ export default function Navbar() {
                     {dropdownOpen[`mobile-${item.id}`] && (
                       <div className="pl-6">
                         {item.children.map((child) => (
-                          <a
-                            key={child.id}
-                            href={child.link}
-                            className="text-gray-600 hover:text-blue-600 block px-3 py-2 text-sm transition-colors duration-200"
-                            onClick={() => setIsOpen(false)}
-                          >
-                            {child.label}
-                          </a>
+                          isExternalLink(child.link) ? (
+                            <a
+                              key={child.id}
+                              href={child.link}
+                              className="text-gray-600 hover:text-blue-600 block px-3 py-2 text-sm transition-colors duration-200"
+                              onClick={() => setIsOpen(false)}
+                            >
+                              {child.label}
+                            </a>
+                          ) : (
+                            <Link
+                              key={child.id}
+                              to={child.link}
+                              className="text-gray-600 hover:text-blue-600 block px-3 py-2 text-sm transition-colors duration-200"
+                              onClick={() => setIsOpen(false)}
+                            >
+                              {child.label}
+                            </Link>
+                          )
                         ))}
                       </div>
                     )}
                   </div>
                 ) : (
-                  <a
-                    href={item.link}
-                    className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium transition-colors duration-200"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {item.label}
-                  </a>
+                  isExternalLink(item.link) ? (
+                    <a
+                      href={item.link}
+                      className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium transition-colors duration-200"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link
+                      to={item.link}
+                      className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium transition-colors duration-200"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  )
                 )}
               </div>
             ))}
-            <a
-              href="/apply"
+            <Link
+              to="/apply"
               className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white block px-4 py-2 rounded-md text-base font-semibold shadow"
               onClick={() => setIsOpen(false)}
             >
               Apply Now
-            </a>
+            </Link>
           </div>
         </div>
       )}
