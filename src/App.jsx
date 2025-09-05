@@ -6,6 +6,10 @@ import AtAGlancePage from './pages/AtAGlancePage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
 import CareerPage from './pages/CareerPage.jsx';
 import FAQPage from './pages/FAQPage.jsx';
+import AdmissionPage from './pages/AdmissionPage.jsx';
+import AdmissionQueryPage from './pages/AdmissionQueryPage.jsx';
+import AdmissionInstructionPage from './pages/AdmissionInstructionPage.jsx';
+import TuitionFeesPage from './pages/TuitionFeesPage.jsx';
 import AcademicInfoPage from './pages/AcademicInfoPage.jsx';
 import DIITNoticePage from './pages/DIITNoticePage.jsx';
 import NUNoticePage from './pages/NUNoticePage.jsx';
@@ -14,7 +18,6 @@ import AlumniPage from './pages/AlumniPage.jsx';
 import AdminPage from './pages/AdminPage.jsx';
 import { api } from './services/api.js';
 import './index.css';
-
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -47,7 +50,6 @@ function App() {
       </div>
     );
   }
-
   return (
     <Router>
       <Routes>
@@ -57,6 +59,10 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/career" element={<CareerPage />} />
         <Route path="/faq" element={<FAQPage />} />
+        <Route path="/admission" element={<AdmissionPage />} />
+        <Route path="/admission/query" element={<AdmissionQueryPage />} />
+        <Route path="/admission/instruction" element={<AdmissionInstructionPage />} />
+        <Route path="/admission/tuition-fees" element={<TuitionFeesPage />} />
         <Route path="/academic-info" element={<AcademicInfoPage />} />
         <Route path="/notice/diit" element={<DIITNoticePage />} />
         <Route path="/notice/nu" element={<NUNoticePage />} />
@@ -76,5 +82,4 @@ function App() {
     </Router>
   );
 }
-
 export default App;
