@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { api } from '../../services/api.js';
+import { api, BACKEND_BASE_URL } from '../../services/api.js';
 
 export default function HeroManager() {
   const [slides, setSlides] = useState([]);
@@ -8,6 +8,7 @@ export default function HeroManager() {
   const [editingSlide, setEditingSlide] = useState(null);
   const [formData, setFormData] = useState({ title: '', subtitle: '', image_url: '' });
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   
   useEffect(() => {
     loadSlides();
@@ -74,6 +75,21 @@ export default function HeroManager() {
     setEditingSlide(null);
     setShowForm(false);
   };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    try {
+      setUploading(true);
+      const res = await api.uploadImage(file);
+      setFormData((prev) => ({ ...prev, image_url: res.url }));
+    } catch (err) {
+      console.error('Upload failed', err);
+      alert('Image upload failed. Please try again.');
+    } finally {
+      setUploading(false);
+    }
+  };
   
   return (
     <div>
@@ -117,15 +133,17 @@ export default function HeroManager() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Image URL</label>
+              <label className="block text-sm font-medium text-gray-700">Slide Image</label>
               <input
-                type="url"
-                required
-                value={formData.image_url}
-                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                placeholder="https://example.com/image.jpg"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                disabled={uploading || loading}
+                className="mt-1 block w-full text-sm"
               />
+              {(uploading) && (
+                <p className="text-xs text-gray-500 mt-1">Uploading image...</p>
+              )}
               {formData.image_url && (
                 <img
                   src={formData.image_url}
@@ -165,7 +183,7 @@ export default function HeroManager() {
             <div key={slide.id} className="bg-white p-6 rounded-lg shadow-md">
               <div className="flex items-start gap-4">
                 <img
-                  src={slide.image_url}
+                  src={slide.image_url?.startsWith('/') ? `${BACKEND_BASE_URL}${slide.image_url}` : slide.image_url}
                   alt={slide.title}
                   className="w-32 h-20 object-cover rounded-md"
                   onError={(e) => {

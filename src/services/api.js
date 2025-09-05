@@ -1,4 +1,5 @@
 const API_BASE_URL = 'http://localhost:8000/api';
+export const BACKEND_BASE_URL = API_BASE_URL.replace('/api', '');
 
 class EducationAPI {
   constructor() {
@@ -6,10 +7,13 @@ class EducationAPI {
   }
 
   getAuthHeaders() {
-    return {
-      'Content-Type': 'application/json',
-      ...(this.token && { 'Authorization': `Bearer ${this.token}` })
-    };
+    const stored = this.token || (typeof localStorage !== 'undefined' ? localStorage.getItem('authToken') : null);
+    const headers = { 'Content-Type': 'application/json' };
+    if (stored) {
+      headers['Authorization'] = `Bearer ${stored}`;
+      this.token = stored;
+    }
+    return headers;
   }
 
   async request(endpoint, options = {}) {
@@ -29,6 +33,27 @@ class EducationAPI {
       console.error('API request failed:', error);
       throw error;
     }
+  }
+
+  async uploadImage(file) {
+    const url = `${API_BASE_URL}/upload`;
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const headers = this.token ? { 'Authorization': `Bearer ${this.token}` } : {};
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: formData
+    });
+    if (!response.ok) {
+      throw new Error(`Upload failed: ${response.status}`);
+    }
+    const data = await response.json();
+    const base = API_BASE_URL.replace('/api', '');
+    const absoluteUrl = data?.url?.startsWith('/uploads') ? `${base}${data.url}` : data?.url;
+    return { url: absoluteUrl };
   }
 
   // Authentication

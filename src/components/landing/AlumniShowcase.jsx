@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { api } from '../../services/api.js';
+import { api, BACKEND_BASE_URL } from '../../services/api.js';
 
 export default function AlumniShowcase() {
   const [alumni, setAlumni] = useState([]);
@@ -34,7 +34,7 @@ export default function AlumniShowcase() {
             <div key={person.id} className="text-center group">
               <div className="relative mb-4">
                 <img
-                  src={person.imageUrl}
+                  src={person.image_url?.startsWith('/') ? `${BACKEND_BASE_URL}${person.image_url}` : person.image_url}
                   alt={person.name}
                   className="w-32 h-32 rounded-full object-cover mx-auto shadow-md group-hover:shadow-lg transition-shadow duration-300"
                 />

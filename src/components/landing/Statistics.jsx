@@ -23,7 +23,9 @@ export default function Statistics() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((stat) => (
             <div key={stat.id} className="text-center">
-              <div className="text-4xl mb-2">{stat.iconUrl}</div>
+              <div className="text-4xl mb-2 text-white">
+                {stat.icon_url ? <i className={`${stat.icon_url}`}></i> : null}
+              </div>
               <div className="text-3xl md:text-4xl font-bold text-white mb-2">
                 {stat.value}
               </div>

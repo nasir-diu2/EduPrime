@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { api } from '../../services/api.js';
+import IconPicker from './IconPicker.jsx';
 
 export default function StatisticsManager() {
   const [stats, setStats] = useState([]);
@@ -8,6 +9,7 @@ export default function StatisticsManager() {
   const [editingStat, setEditingStat] = useState(null);
   const [formData, setFormData] = useState({ label: '', value: '', icon_url: '' });
   const [loading, setLoading] = useState(false);
+  const [showIconPicker, setShowIconPicker] = useState(false);
   
   useEffect(() => {
     loadStats();
@@ -114,14 +116,21 @@ export default function StatisticsManager() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Icon (Emoji)</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.icon_url}
-                  onChange={(e) => setFormData({ ...formData, icon_url: e.target.value })}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="📊"
+                <label className="block text-sm font-medium text-gray-700">Icon</label>
+                <div
+                  className="mt-1 flex items-center gap-3 px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                  onClick={() => setShowIconPicker(true)}
+                >
+                  {formData.icon_url ? (
+                    <i className={`${formData.icon_url} text-2xl`}></i>
+                  ) : (
+                    <span className="text-gray-400">Choose icon</span>
+                  )}
+                </div>
+                <IconPicker
+                  open={showIconPicker}
+                  onClose={() => setShowIconPicker(false)}
+                  onSelect={(icon) => setFormData((p) => ({ ...p, icon_url: icon }))}
                 />
               </div>
             </div>

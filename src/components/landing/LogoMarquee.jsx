@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { api } from '../../services/api.js';
+import { api, BACKEND_BASE_URL } from '../../services/api.js';
 
 export default function LogoMarquee() {
   const [logos, setLogos] = useState([]);
@@ -40,7 +40,7 @@ export default function LogoMarquee() {
                   className="block opacity-60 hover:opacity-100 transition-opacity duration-300"
                 >
                   <img
-                    src={logo.imageUrl}
+                    src={logo.image_url?.startsWith('/') ? `${BACKEND_BASE_URL}${logo.image_url}` : logo.image_url}
                     alt={logo.name}
                     className="h-16 w-auto object-contain"
                   />

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { api } from '../../services/api.js';
+import { api, BACKEND_BASE_URL } from '../../services/api.js';
 
 export default function LogosManager() {
   const [logos, setLogos] = useState([]);
@@ -8,6 +8,7 @@ export default function LogosManager() {
   const [editingLogo, setEditingLogo] = useState(null);
   const [formData, setFormData] = useState({ name: '', image_url: '', link: '' });
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   
   useEffect(() => {
     loadLogos();
@@ -70,6 +71,21 @@ export default function LogosManager() {
     setEditingLogo(null);
     setShowForm(false);
   };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    try {
+      setUploading(true);
+      const res = await api.uploadImage(file);
+      setFormData((prev) => ({ ...prev, image_url: res.url }));
+    } catch (err) {
+      console.error('Upload failed', err);
+      alert('Image upload failed. Please try again.');
+    } finally {
+      setUploading(false);
+    }
+  };
   
   return (
     <div>
@@ -102,15 +118,17 @@ export default function LogosManager() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Logo Image URL</label>
+              <label className="block text-sm font-medium text-gray-700">Logo Image</label>
               <input
-                type="url"
-                required
-                value={formData.image_url}
-                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                placeholder="https://example.com/logo.png"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                disabled={uploading || loading}
+                className="mt-1 block w-full text-sm"
               />
+              {(uploading) && (
+                <p className="text-xs text-gray-500 mt-1">Uploading image...</p>
+              )}
               {formData.image_url && (
                 <img
                   src={formData.image_url}
@@ -160,7 +178,7 @@ export default function LogosManager() {
           {logos.map((logo) => (
             <div key={logo.id} className="bg-white p-6 rounded-lg shadow-md text-center">
               <img
-                src={logo.image_url}
+                src={logo.image_url?.startsWith('/') ? `${BACKEND_BASE_URL}${logo.image_url}` : logo.image_url}
                 alt={logo.name}
                 className="h-16 w-auto object-contain mx-auto mb-4"
                 onError={(e) => {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { api } from '../../services/api.js';
+import { api, BACKEND_BASE_URL } from '../../services/api.js';
 
 export default function HeroSlider() {
   const [slides, setSlides] = useState([]);
@@ -50,7 +50,7 @@ export default function HeroSlider() {
         >
           <div
             className="w-full h-full bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${slide.imageUrl})` }}
+            style={{ backgroundImage: `url(${slide.image_url?.startsWith('/') ? `${BACKEND_BASE_URL}${slide.image_url}` : slide.image_url})` }}
           >
             <div className="absolute inset-0 bg-black bg-opacity-50"></div>
           </div>

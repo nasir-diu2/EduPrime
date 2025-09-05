@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { api } from '../../services/api.js';
+import { api, BACKEND_BASE_URL } from '../../services/api.js';
 
 export default function Programs() {
   const [programs, setPrograms] = useState([]);
@@ -32,7 +32,7 @@ export default function Programs() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {programs.map((program) => (
             <div key={program.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-              <div className="h-48 bg-cover bg-center" style={{ backgroundImage: `url(${program.imageUrl})` }}></div>
+              <div className="h-48 bg-cover bg-center" style={{ backgroundImage: `url(${program.image_url?.startsWith('/') ? `${BACKEND_BASE_URL}${program.image_url}` : program.image_url})` }}></div>
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
                   {program.title}

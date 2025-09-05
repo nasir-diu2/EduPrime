@@ -32,7 +32,9 @@ export default function WhyChooseUs() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature) => (
             <div key={feature.id} className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-              <div className="text-4xl mb-4 text-center">{feature.iconUrl}</div>
+              <div className="text-4xl mb-4 text-center">
+                {feature.icon_url ? <i className={`${feature.icon_url}`}></i> : null}
+              </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">
                 {feature.title}
               </h3>

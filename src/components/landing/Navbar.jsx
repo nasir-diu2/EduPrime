@@ -2,6 +2,58 @@ import { useState, useEffect } from 'react';
 import { Bars3Icon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import { api } from '../../services/api.js';
 
+const MENU = [
+  {
+    label: 'About',
+    type: 'mega',
+    columns: [
+      { heading: 'About', items: [
+        { label: 'About Us', link: '/about' },
+        { label: 'At A Glance', link: '/at-a-glance' },
+        { label: 'Contact', link: '/contact' },
+        { label: 'Career', link: '/career' },
+        { label: 'FAQ', link: '/faq' }
+      ] },
+      { heading: 'Admission', items: [
+        { label: 'Admission Query', link: '/admission/query' },
+        { label: 'Instruction', link: '/admission/instruction' },
+        { label: 'Tuition Fees', link: '/admission/tuition-fees' }
+      ] },
+      { heading: 'Academic Info', items: [
+        { label: 'DIIT Notice', link: '/notice/diit' },
+        { label: 'NU Notice', link: '/notice/nu' },
+        { label: 'Faculty', link: '/faculty' },
+        { label: 'Alumni', link: '/alumni' }
+      ] },
+      { heading: 'Administrative', items: [
+        { label: 'Pure Administrative', link: '/administrative/pure' },
+        { label: 'Academic Administrative', link: '/administrative/academic' }
+      ] }
+    ]
+  },
+  {
+    label: 'Programs',
+    type: 'mega',
+    columns: [
+      { heading: 'Under Graduate Program', items: [
+        { label: 'B.Sc. in Computer Science and Engineering', link: '/programs/cse' },
+        { label: 'Bachelor of Business Administration (BBA)', link: '/programs/bba' },
+        { label: 'BBA in Tourism and Hospitality Management', link: '/programs/bba-thm' }
+      ] },
+      { heading: 'Post Graduate Program', items: [
+        { label: 'Masters of Business Administration (MBA)', link: '/programs/mba' },
+        { label: 'MBA in Tourism and Hospitality Management', link: '/programs/mba-thm' }
+      ] }
+    ]
+  },
+  {
+    label: 'News & Articles',
+    type: 'dropdown',
+    items: [ { label: 'News & Publications', link: '/news' } ]
+  }
+];
+ 
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [navItems, setNavItems] = useState([]);
@@ -56,7 +108,12 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {groupedItems.map((item) => (
-              <div key={item.id} className="relative">
+              <div
+                key={item.id}
+                className="relative"
+                onMouseEnter={() => setDropdownOpen(prev => ({ ...prev, [item.id]: true }))}
+                onMouseLeave={() => setDropdownOpen(prev => ({ ...prev, [item.id]: false }))}
+              >
                 {item.has_dropdown && item.children.length > 0 ? (
                   <div>
                     <button
@@ -67,7 +124,7 @@ export default function Navbar() {
                       <ChevronDownIcon className={`h-4 w-4 transition-transform duration-200 ${dropdownOpen[item.id] ? 'rotate-180' : ''}`} />
                     </button>
                     {dropdownOpen[item.id] && (
-                      <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-50">
+                      <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-md shadow-xl border border-gray-100 py-2 z-50">
                         {item.children.map((child) => (
                           <a
                             key={child.id}
@@ -92,10 +149,10 @@ export default function Navbar() {
               </div>
             ))}
             <a
-              href="/admin"
-              className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors duration-200"
+              href="/apply"
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2 rounded-md text-sm font-semibold shadow hover:from-blue-700 hover:to-indigo-700 transition-colors duration-200"
             >
-              Admin
+              Apply Now
             </a>
           </div>
           
@@ -157,11 +214,11 @@ export default function Navbar() {
               </div>
             ))}
             <a
-              href="/admin"
-              className="bg-blue-600 text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-700 transition-colors duration-200"
+              href="/apply"
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white block px-4 py-2 rounded-md text-base font-semibold shadow"
               onClick={() => setIsOpen(false)}
             >
-              Admin
+              Apply Now
             </a>
           </div>
         </div>

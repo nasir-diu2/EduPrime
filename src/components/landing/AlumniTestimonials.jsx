@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { api } from '../../services/api.js';
+import { api, BACKEND_BASE_URL } from '../../services/api.js';
 
 export default function AlumniTestimonials() {
   const [testimonials, setTestimonials] = useState([]);
@@ -56,7 +56,7 @@ export default function AlumniTestimonials() {
             <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="flex-shrink-0">
                 <img
-                  src={testimonials[currentIndex].imageUrl}
+                  src={testimonials[currentIndex].image_url?.startsWith('/') ? `${BACKEND_BASE_URL}${testimonials[currentIndex].image_url}` : testimonials[currentIndex].image_url}
                   alt={testimonials[currentIndex].name}
                   className="w-24 h-24 rounded-full object-cover"
                 />

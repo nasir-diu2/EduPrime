@@ -1,6 +1,7 @@
-from fastapi import FastAPI, HTTPException, Depends, status
+from fastapi import FastAPI, HTTPException, Depends, status, UploadFile, File
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
@@ -11,6 +12,7 @@ from passlib.context import CryptContext
 from jose import JWTError, jwt
 import os
 from dotenv import load_dotenv
+import uuid
 
 load_dotenv()
 
@@ -36,6 +38,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Create the upload directory and mount it so files are publicly accessible
+UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 # Database Models
 class User(Base):
@@ -286,6 +293,10 @@ def login(user_data: UserLogin, db: Session = Depends(get_db)):
 @app.post("/api/auth/logout")
 def logout():
     return {"message": "Successfully logged out"}
+
+@app.get("/api/auth/me")
+def auth_me(current_user: User = Depends(get_current_user)):
+    return {"id": current_user.id, "name": current_user.name, "email": current_user.email, "role": current_user.role}
 
 # Navbar routes
 @app.get("/api/navbar")
@@ -671,6 +682,27 @@ def delete_logo(logo_id: int, db: Session = Depends(get_db), current_user: User 
     db.delete(db_logo)
     db.commit()
     return {"message": "Logo deleted successfully"}
+
+@app.post("/api/upload")
+def upload_image(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user)
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+
+    if not file.content_type or not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="Only image files are allowed")
+
+    ext = os.path.splitext(file.filename)[1].lower()
+    unique_name = f"{uuid.uuid4().hex}{ext}"
+    dest_path = os.path.join(UPLOAD_DIR, unique_name)
+
+    with open(dest_path, "wb") as out:
+        out.write(file.file.read())
+
+    # The URL to save in your existing image_url fields
+    return {"url": f"/uploads/{unique_name}"}
 
 if __name__ == "__main__":
     import uvicorn
