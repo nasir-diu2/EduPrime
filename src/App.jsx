@@ -6,6 +6,10 @@ import AtAGlancePage from './pages/AtAGlancePage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
 import CareerPage from './pages/CareerPage.jsx';
 import FAQPage from './pages/FAQPage.jsx';
+import AdmissionPage from './pages/AdmissionPage.jsx';
+import AdmissionQueryPage from './pages/AdmissionQueryPage.jsx';
+import AdmissionInstructionPage from './pages/AdmissionInstructionPage.jsx';
+import TuitionFeesPage from './pages/TuitionFeesPage.jsx';
 import AdminPage from './pages/AdminPage.jsx';
 import { api } from './services/api.js';
 import './index.css';
@@ -52,6 +56,10 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/career" element={<CareerPage />} />
         <Route path="/faq" element={<FAQPage />} />
+        <Route path="/admission" element={<AdmissionPage />} />
+        <Route path="/admission/query" element={<AdmissionQueryPage />} />
+        <Route path="/admission/instruction" element={<AdmissionInstructionPage />} />
+        <Route path="/admission/tuition-fees" element={<TuitionFeesPage />} />
         <Route 
           path="/admin/*" 
           element={
