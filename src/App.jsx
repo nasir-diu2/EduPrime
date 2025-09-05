@@ -6,6 +6,11 @@ import AtAGlancePage from './pages/AtAGlancePage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
 import CareerPage from './pages/CareerPage.jsx';
 import FAQPage from './pages/FAQPage.jsx';
+import AcademicInfoPage from './pages/AcademicInfoPage.jsx';
+import DIITNoticePage from './pages/DIITNoticePage.jsx';
+import NUNoticePage from './pages/NUNoticePage.jsx';
+import FacultyPage from './pages/FacultyPage.jsx';
+import AlumniPage from './pages/AlumniPage.jsx';
 import AdminPage from './pages/AdminPage.jsx';
 import { api } from './services/api.js';
 import './index.css';
@@ -52,6 +57,11 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/career" element={<CareerPage />} />
         <Route path="/faq" element={<FAQPage />} />
+        <Route path="/academic-info" element={<AcademicInfoPage />} />
+        <Route path="/notice/diit" element={<DIITNoticePage />} />
+        <Route path="/notice/nu" element={<NUNoticePage />} />
+        <Route path="/faculty" element={<FacultyPage />} />
+        <Route path="/alumni" element={<AlumniPage />} />
         <Route 
           path="/admin/*" 
           element={
